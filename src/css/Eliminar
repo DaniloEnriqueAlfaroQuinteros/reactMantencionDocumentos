@@ -1,11 +1,11 @@
 .containerPrincipal {
     position: absolute;
       left: 50%;
-      top: 25%;
+      top: 30%;
       transform: translate(-50%, -50%);
-      border: 1px solid blue;
+      border: 3px solid rgb(0, 136, 255);
       padding: 40px;
-      background-color: rgb(56, 30, 127);
+      background-color: white;
   }
   
   .containerSecundario{

@@ -5,10 +5,11 @@ import axios from 'axios';
 import md5 from 'md5';
 import Cookies from 'universal-cookie';
 
-const baseUrl="http://localhost:3001/usuarios";
+const baseUrl="http://localhost:3002/usuarios";
 const cookies = new Cookies();
 
 class Login extends Component {
+    
     state={
         form:{
             username: '',
@@ -32,7 +33,7 @@ class Login extends Component {
         })
         .then(response=>{
             if(response.length>0){
-                var respuesta=response[0];
+                let respuesta=response[0];
                 cookies.set('id', respuesta.id, {path: "/"});
                 cookies.set('apellido_paterno', respuesta.apellido_paterno, {path: "/"});
                 cookies.set('apellido_materno', respuesta.apellido_materno, {path: "/"});

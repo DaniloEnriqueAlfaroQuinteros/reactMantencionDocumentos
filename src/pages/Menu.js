@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Cookies from 'universal-cookie';
-
+import '../css/Menu.css';
 const cookies = new Cookies();
 
 class Menu extends Component {
@@ -10,8 +10,36 @@ class Menu extends Component {
         cookies.remove('apellido_materno', {path: "/"});
         cookies.remove('nombre', {path: "/"});
         cookies.remove('username', {path: "/"});
+        cookies.remove('tipodoc', {path: "/"});
+        cookies.remove('sucursal', {path: "/"});
+        cookies.remove('correlativo', {path: "/"});
+        cookies.remove('fechainical', {path: "/"});
+        cookies.remove('fechafinal', {path: "/"});
         window.location.href='./';
     }
+    consultaDoc=()=>{
+        cookies.remove('id', {path: "/"});
+        cookies.remove('apellido_paterno', {path: "/"});
+        cookies.remove('apellido_materno', {path: "/"});
+        cookies.remove('nombre', {path: "/"});
+        cookies.remove('username', {path: "/"});
+        cookies.remove('tipodoc', {path: "/"});
+        cookies.remove('fechainical', {path: "/"});
+        cookies.remove('fechafinal', {path: "/"});
+        window.location.href='./consulta';
+    }
+    eliminarDoc=()=>{
+        cookies.remove('id', {path: "/"});
+        cookies.remove('apellido_paterno', {path: "/"});
+        cookies.remove('apellido_materno', {path: "/"});
+        cookies.remove('nombre', {path: "/"});
+        cookies.remove('username', {path: "/"});
+        cookies.remove('tipodoc', {path: "/"});
+        cookies.remove('fechainical', {path: "/"});
+        cookies.remove('fechafinal', {path: "/"});
+        window.location.href='./eliminar';
+    }
+
 
     componentDidMount() {
         if(!cookies.get('username')){
@@ -26,11 +54,17 @@ class Menu extends Component {
         console.log('nombre: '+cookies.get('nombre'));
         console.log('username: '+cookies.get('username'));
         return (
-            <div>
+            
+            <div className="containerPrincipal">
                 Menu Principal
-
+                <div className="containerSecundario">
                 <br />
-                <button onClick={()=>this.cerrarSesion()}>Cerrar Sesión</button>
+                <button className="btn" onClick={()=>this.consultaDoc()}>Consulta Documento</button>
+                <br />
+                <button className="button" onClick={()=>this.eliminarDoc()}>Elimina Documento</button>
+                <br />
+                <button className="button" onClick={()=>this.cerrarSesion()}>Cerrar Sesión</button>
+                </div>
             </div>
         );
     }
