@@ -8,6 +8,7 @@ import Cookies from 'universal-cookie';
 import { useEffect, useContext, useState } from 'react';
 import Menu from '../pages/Menu';
 import { useNavigate } from "react-router-dom";
+import {GridLoader} from "react-spinners"
 import {
     Dialog,
     DialogActions,
@@ -50,12 +51,14 @@ class Login extends Component {
         super(props);
         this.state = {
           dialogValidation: false,
-          dialogInfo: false
+          dialogInfo: false,
+          isLoading: false
         };
       }
 
     iniciarSesion=async()=>{
-        await axios.get(baseUrl, {params: {username: this.state.form.username, password: md5(this.state.form.password)}})
+        this.setState({ isLoading: true});
+        await axios.get(baseUrl, { timeout: 10000, params: {username: this.state.form.username, password: md5(this.state.form.password)}})
         .then(response=>{
             return response.data;
         })
@@ -67,15 +70,19 @@ class Login extends Component {
                 cookies.set('apellido_materno', respuesta.apellido_materno, {path: "/"});
                 cookies.set('nombre', respuesta.nombre, {path: "/"});
                 cookies.set('username', respuesta.username, {path: "/"});
+                this.setState({ isLoading: false});
                 this.setState({ dialogInfo: true});
 
             }else{
-
+                this.setState({ isLoading: false});
                 this.setState({ dialogValidation: true});
             }
         })
         .catch(error=>{
+            this.setState({ isLoading: false});
+            this.setState({ dialogValidation: true});
             console.log(error);
+            
         })
 
     }
@@ -106,9 +113,7 @@ class Login extends Component {
             <Grid item xs={12}>
             </Grid>
             <Grid item xs={12}>
-            <Typography variant="h3" color="primary">
-                
-                </Typography>
+            
             </Grid>
             <Grid item xs={12}>
             <img
@@ -120,7 +125,9 @@ class Login extends Component {
 
 
             <Grid item xs={12}>
+            
             </Grid>
+
             <Grid item xs={5}>
             
             </Grid>
@@ -154,13 +161,22 @@ class Login extends Component {
                 </Grid>
                
                 <Grid item xs={12}>
-                <Button variant="contained" endIcon={<PlayCircleFilledWhiteOutlinedIcon />} onClick={()=> this.iniciarSesion()}> Acceder </Button>
+                <Button variant="contained" endIcon={<PlayCircleFilledWhiteOutlinedIcon />} onClick={()=> 
+                {
+                    
+                    this.iniciarSesion();
+                    
+                }}> Acceder </Button>
                 </Grid>
                 <Grid item xs={12}>
                 <Typography variant="h8" color="secondary">
                 Recupera tu contraseña aquí.
                 </Typography>
                 </Grid>
+                <Grid item xs={12}>
+                <GridLoader color="#003CFF" loading={this.state.isLoading} size={15}/>
+                </Grid>
+                
            
             </Grid>
             <Grid item xs={5}>
@@ -239,7 +255,7 @@ class Login extends Component {
           </Button>
         </DialogActions>
       </Dialog>
-
+      
           </>
         );
     }
