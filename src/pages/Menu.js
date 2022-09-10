@@ -1,10 +1,25 @@
 import React, { Component } from 'react';
 import Cookies from 'universal-cookie';
 import '../css/Menu.css';
+import Logo from '../../src/static/Logo.jpg';
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Button,
+    Grid,
+    TextField,
+    Typography,
+    DialogContentText,
+  } from '@mui/material';
+  import PlayCircleFilledWhiteOutlinedIcon from '@mui/icons-material/PlayCircleFilledWhiteOutlined';
+
 const cookies = new Cookies();
 
-class Menu extends Component {
-    cerrarSesion=()=>{
+const Menu = () => {
+
+    const cerrarSesion = () =>{
         cookies.remove('id', {path: "/"});
         cookies.remove('apellido_paterno', {path: "/"});
         cookies.remove('apellido_materno', {path: "/"});
@@ -17,7 +32,7 @@ class Menu extends Component {
         cookies.remove('fechafinal', {path: "/"});
         window.location.href='./';
     }
-    consultaDoc=()=>{
+    const consultaDoc=()=>{
         cookies.remove('id', {path: "/"});
         cookies.remove('apellido_paterno', {path: "/"});
         cookies.remove('apellido_materno', {path: "/"});
@@ -28,7 +43,7 @@ class Menu extends Component {
         cookies.remove('fechafinal', {path: "/"});
         window.location.href='./consulta';
     }
-    eliminarDoc=()=>{
+    const eliminarDoc=()=>{
         cookies.remove('id', {path: "/"});
         cookies.remove('apellido_paterno', {path: "/"});
         cookies.remove('apellido_materno', {path: "/"});
@@ -41,33 +56,126 @@ class Menu extends Component {
     }
 
 
-    componentDidMount() {
+    const componentDidMount = () => {
         if(!cookies.get('username')){
             window.location.href="./";
         }
     }
 
-    render() {
-        console.log('id: '+ cookies.get('id'));
-        console.log('apellido_paterno: '+cookies.get('apellido_paterno'));
-        console.log('apellido_materno: '+cookies.get('apellido_materno'));
-        console.log('nombre: '+cookies.get('nombre'));
-        console.log('username: '+cookies.get('username'));
+
+
         return (
+            <>
+            <Grid
+            container
+            style={{ background: "linear-gradient(#FFFFFF 30%, #003CFF)" }}
+            textAlign="center"
+            rowSpacing={5}
+            gap={1}
+            id="PageGrid"
+          >
+             <Grid item xs={12}>
+
+            </Grid>
+            <Grid item xs={1}>
+
+            </Grid>
+            <Grid item xs={6} textAlign="left" >
+            <img
+                src={Logo}
+                width={50} height={50}
+                style={{borderRadius: '50%'}}
+                />
+            </Grid>
+            <Grid item xs={5}>
             
-            <div className="containerPrincipal">
-                Menu Principal
-                <div className="containerSecundario">
-                <br />
-                <button className="btn" onClick={()=>this.consultaDoc()}>Consulta Documento</button>
-                <br />
-                <button className="button" onClick={()=>this.eliminarDoc()}>Elimina Documento</button>
-                <br />
-                <button className="button" onClick={()=>this.cerrarSesion()}>Cerrar Sesión</button>
-                </div>
-            </div>
+            </Grid>
+            <Grid item xs={12}>
+
+            </Grid>
+            <Grid item xs={12}>
+
+            </Grid>
+            <Grid item xs={5}>
+
+            </Grid>
+            <Grid container textAlign="Center" rowSpacing={1} xs={2}>
+
+
+
+                <Grid item xs={12}>
+                <Button variant="contained"  onClick={()=> 
+                {
+                    
+                    consultaDoc();
+                    
+                }} style={{maxWidth: '250px', maxHeight: '40px', minWidth: '250px', minHeight: '40px'}}> Consulta documentos </Button>
+                </Grid>
+                <Grid item xs={12}>
+            
+                </Grid>
+                <Grid item xs={12}>
+                <Button variant="contained"  onClick={()=> 
+                {
+                    
+                    eliminarDoc();
+                    
+                }} style={{maxWidth: '250px', maxHeight: '40px', minWidth: '250px', minHeight: '40px'}}> Elimina  documentos </Button>
+                </Grid>
+
+                <Grid item xs={12}>
+            
+                </Grid>
+               
+                <Grid item xs={12}>
+                <Button variant="contained"  onClick={()=> 
+                {
+                    
+                    cerrarSesion();
+                    
+                }} style={{maxWidth: '250px', maxHeight: '40px', minWidth: '250px', minHeight: '40px'}}>  Cerrar  sesion  </Button>
+                </Grid>
+                <Grid item xs={12}>
+                
+                </Grid>
+                
+           
+            </Grid>
+            <Grid item xs={5}>
+
+            </Grid>
+            <Grid item xs={12}>
+
+            </Grid>
+            <Grid item xs={12}>
+
+            </Grid>
+            <Grid item xs={12}>
+
+            </Grid>
+            <Grid item xs={12}>
+
+            </Grid>
+            <Grid item xs={12}>
+
+            </Grid>
+            <Grid item xs={12}>
+
+            </Grid>
+            <Grid item xs={12}>
+
+            </Grid>
+            <Grid item xs={12}>
+
+            </Grid>
+            <Grid item xs={12}>
+
+            </Grid>
+
+            </Grid>
+            </>
         );
-    }
+    
 }
 
 export default Menu;

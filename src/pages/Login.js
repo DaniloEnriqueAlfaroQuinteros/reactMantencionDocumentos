@@ -5,10 +5,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import md5 from 'md5';
 import Cookies from 'universal-cookie';
-import { useEffect, useContext, useState } from 'react';
-import Menu from '../pages/Menu';
-import { useNavigate } from "react-router-dom";
 import {GridLoader} from "react-spinners"
+
 import {
     Dialog,
     DialogActions,
@@ -16,14 +14,11 @@ import {
     DialogTitle,
     Button,
     Grid,
-    Theme,
     TextField,
     Typography,
-    Avatar,
     DialogContentText,
   } from '@mui/material';
   import PlayCircleFilledWhiteOutlinedIcon from '@mui/icons-material/PlayCircleFilledWhiteOutlined';
-import SelectInput from '@mui/material/Select/SelectInput';
 
 const baseUrl="http://localhost:3002/usuarios";
 const cookies = new Cookies();
@@ -58,7 +53,7 @@ class Login extends Component {
 
     iniciarSesion=async()=>{
         this.setState({ isLoading: true});
-        await axios.get(baseUrl, { timeout: 10000, params: {username: this.state.form.username, password: md5(this.state.form.password)}})
+        await axios.get(baseUrl, { timeout: 15000, params: {username: this.state.form.username, password: md5(this.state.form.password)}})
         .then(response=>{
             return response.data;
         })
@@ -92,11 +87,6 @@ class Login extends Component {
             window.location.href="./menu";
         }
     }
-
-   
-        
-  
-    
 
     render() {
         return (
@@ -174,7 +164,7 @@ class Login extends Component {
                 </Typography>
                 </Grid>
                 <Grid item xs={12}>
-                <GridLoader color="#003CFF" loading={this.state.isLoading} size={15}/>
+                
                 </Grid>
                 
            
@@ -256,6 +246,21 @@ class Login extends Component {
         </DialogActions>
       </Dialog>
       
+
+      <Dialog
+        open={this.state.isLoading}
+        PaperProps={{
+            style: {
+              backgroundColor: 'transparent',
+              boxShadow: 'none',
+            },
+          }}
+      >
+        <DialogContent>
+        <GridLoader color="#FFFFFF" loading={this.state.isLoading} size={20}/>
+        </DialogContent>
+      </Dialog>
+
           </>
         );
     }
