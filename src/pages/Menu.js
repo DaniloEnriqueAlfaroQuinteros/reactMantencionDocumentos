@@ -56,9 +56,6 @@ const Menu = () => {
             gap={1}
             id="PageGrid"
           >
-             <Grid item xs={12}>
-
-            </Grid>
             <Grid item xs={1}>
 
             </Grid>
@@ -153,6 +150,9 @@ const Menu = () => {
             </Grid>
             <Grid item xs={12}>
 
+            </Grid>
+            <Grid item xs={12}>
+                
             </Grid>
 
             </Grid>

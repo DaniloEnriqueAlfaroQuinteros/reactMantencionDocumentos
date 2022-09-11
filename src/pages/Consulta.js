@@ -3,33 +3,45 @@ import '../css/Consulta.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
+import Logo from '../../src/static/Logo.jpg';
+import AccountMenu from '../components/AccountMenu.js';
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Button,
+    Grid,
+    TextField,
+    Typography,
+    DialogContentText,
+  } from '@mui/material';
 
 const baseUrl="http://localhost:3002/documentos";
 const cookies = new Cookies();
 
-class Consulta extends Component {
-    state={
-        data:[],
-        form:{
-            tipodoc: '',
-            sucursal: '',
-            correlativo: ''
-         }
-    }
-   
-    handleChange=async e=>{
-        this.setState({
-            form:{
-                ...this.state.form,
-                [e.target.name]: e.target.value
-            }
-        });
-    }
+const Consulta = () => {
 
-    consultaDoc=async()=>{
-        await axios.get(baseUrl, {params: {tipodoc: this.state.form.tipodoc, sucursal: this.state.form.sucursal, correlativo: this.state.form.correlativo}})
+  const [consultaForm, setConsultaForm] = React.useState({
+    tipoDoc: "",
+    sucursal: "",
+    correlativo: "",
+  });
+  const [responseData, setResponseData] = React.useState(Object);
+   
+  const handleChange = async (e) =>{
+      setConsultaForm({
+           
+                ...consultaForm,
+                [e.target.name]: e.target.value
+     
+        });
+  }
+
+    const consultaDoc=async()=>{
+        await axios.get(baseUrl, {params: {tipodoc: consultaForm.tipoDoc, sucursal: consultaForm.sucursal, correlativo: consultaForm.correlativo}})
         .then(response=>{
-            this.setState({data: response.data});
+            setResponseData(response.data);
             return response.data;
         })
         .then(response=>{
@@ -47,104 +59,200 @@ class Consulta extends Component {
         })
 
     }
-
-    componentDidMount() {
-        if(cookies.get('tipodoc')){
-            window.location.href="./menu";
-        }
+    const volver = () => {
+      window.location.href='./Menu';
     }
-    volver() {
-      window.location.href='./';
+    const enviar = () => {
+      window.location.href='./Menu';
     }
     
 
-    render() {
+   
         return (
-          <React.Fragment>
-            
-    <div className="containerPrincipal">
-    
-        CONSULTA DOCUMENTOS
-        <div className="containerSecundario">
-          <div className="form-group">
-            <label>Tipo Documento: </label>
-            <br />
-            <input 
-              type="text"
-              className="form-control"
-              name="tipodoc"
-              onChange={this.handleChange}
-            />
-            <label>Sucursal: </label>
-            
-            <input 
-              type="sucursal"
-              className="form-control"
-              name="sucursal"
-              onChange={this.handleChange}
-            />
-            <label>Correlativo: </label>
-            <input width="5px" height="10px"
-              type="correlativo"
-              className="form-control"
-              name="correlativo"
-              onChange={this.handleChange}
-            />
-            <br />
-            <button className="btn btn-primary" onClick={()=> this.consultaDoc()}>Consulta Documento</button>
-            <br /><br />
-            <button className="btn btn-primary" onClick={()=> this.volver()}>Volver</button>
-         
-          </div>
-          </div>
-      </div>
+      <>
+      <Grid
+      container
+      style={{ background: "linear-gradient(#FFFFFF 30%, #003CFF)" }}
+      textAlign="center"
+      rowSpacing={5}
+      gap={1}
+      id="PageGrid"
+    >
 
-<div className="containerPrincipalTable">
-        DETALLE DOCUMENTOS
-        <div className="containerSecundarioTable">
-          <div className="form-group">
-    <table className="table ">
-      <thead>
-        <tr>
-          <th>TipoDoc</th>
-          <th>Sucursal</th>
-          <th>Correlativo</th>
-          <th>Mail</th>
-          <th>Fecha</th>
-          <th>Estado</th>
-        </tr>        
-      </thead>
-     
-      <tbody>
-        {this.state.data.map(empresa=>{
-          return(
-            <React.Fragment>
-          <tr>
-          <td>{empresa.tipodoc}</td>
-          <td>{empresa.sucursal}</td>
-          <td>{empresa.correlativo}</td>
-          <td>{empresa.mail}</td>
-          <td>{empresa.fechaRegistro}</td>
-          <td>{empresa.estado}</td>
-          </tr>
-         <br />
-         <button className="btn btn-primary" onClick={()=> this.enviar()}>Enviar Docto</button>
-         </React.Fragment>
-          )
-        })}
-      </tbody>
-    </table>
+      <Grid item xs={1}>
 
-
-          </div>
-        </div>
-      </div>
+      </Grid>
+      <Grid item xs={2} textAlign="left" >
+      <img
+          src={Logo}
+          width={50} height={50}
+          style={{borderRadius: '50%'}}
+          />
+      </Grid>
+      <Grid item xs={6}>
       
+      </Grid>
+      <Grid item xs={2} textAlign="right">
+      <AccountMenu/>
+      </Grid>
+      <Grid item xs={1}>
+      
+      </Grid>
+      <Grid item xs={12}>
+
+      </Grid>
+
+      <Grid item xs={5}>
+
+      </Grid>
+      <Grid container textAlign="Center" rowSpacing={1} xs={2}>
 
 
-      </React.Fragment>
+
+          <Grid item xs={12}>
+          <TextField id="outlined-basic" label="Tipo documento" variant="outlined"
+          type="text"
+          className="form-control"
+          name="tipoDoc"
+          value={consultaForm.tipoDoc}
+          onChange={handleChange}
+          />
+          </Grid>
+
+          <Grid item xs={12}>
+          <TextField id="outlined-basic" label="Sucursal" variant="outlined"
+          type="text"
+          className="form-control"
+          name="sucursal"
+          value={consultaForm.sucursal}
+          onChange={handleChange}
+          />
+          </Grid>
+
+          <Grid item xs={12}>
+          <TextField id="outlined-basic" label="Correlativo" variant="outlined"
+          type="text"
+          className="form-control"
+          name="correlativo"
+          value={consultaForm.correlativo}
+          onChange={handleChange}
+          />
+          </Grid>
+         
+          <Grid item xs={12}>
+          <Button variant="contained"  onClick={()=>
+            { 
+              consultaDoc()
+            }
+            } style={{maxWidth: '250px', maxHeight: '40px', minWidth: '250px', minHeight: '40px'}}> Consulta  documento </Button>
+          </Grid>
+          <Grid item xs={12}>
+          <Button variant="contained"  onClick={()=>
+            { 
+              volver()
+            }
+            } style={{maxWidth: '250px', maxHeight: '40px', minWidth: '250px', minHeight: '40px'}}> volver </Button>
+          </Grid>
+
+          
+     
+      </Grid>
+      <Grid item xs={5}>
+
+      </Grid>
+      <Grid container textAlign="Center" rowSpacing={1} xs={12}>
+          <Grid item xs={3}>
+
+          </Grid>
+          <Grid item xs={1}>
+            <Typography > Tipo Documento</Typography>
+          </Grid>
+          <Grid item xs={1}>
+            <Typography> Sucursal</Typography>
+          </Grid>
+          <Grid item xs={1}>
+          <Typography> Correlativo</Typography>
+          </Grid>
+          <Grid item xs={1}>
+          <Typography> Mail</Typography>
+          </Grid>
+          <Grid item xs={1}>
+          <Typography> Fecha de registro</Typography>
+          </Grid>
+          <Grid item xs={1}>
+          <Typography> Estado</Typography>
+          </Grid>
+          <Grid item xs={3}>
+
+          </Grid>
+
+          <Grid item xs={3}>
+
+          </Grid>
+          <Grid item xs={1}>
+          <Typography> {responseData.tipodoc}</Typography>
+          </Grid>
+          <Grid item xs={1}>
+          <Typography> {responseData.sucursal}</Typography>
+          </Grid>
+          <Grid item xs={1}>
+          <Typography>{responseData.correlativo}</Typography>
+          </Grid>
+          <Grid item xs={1}>
+          <Typography>{responseData.mail}</Typography>
+          </Grid>
+          <Grid item xs={1}>
+          <Typography>{responseData.fechaRegistro}</Typography>
+          </Grid>
+          <Grid item xs={1}>
+          <Typography>{responseData.estado}</Typography>
+          </Grid>
+          <Grid item xs={3}>
+
+          </Grid>
+      </Grid>
+
+
+      <Grid item xs={12}>
+
+      </Grid>
+      <Grid item xs={4}>
+
+      </Grid>
+      <Grid item xs={4}>
+      <Button variant="contained"  onClick={()=>
+            { 
+              enviar()
+            }
+            } style={{maxWidth: '250px', maxHeight: '40px', minWidth: '250px', minHeight: '40px'}}> enviar </Button>
+      </Grid>
+      <Grid item xs={4}>
+
+      </Grid>
+
+      <Grid item xs={12}>
+
+      </Grid>
+      <Grid item xs={12}>
+
+      </Grid>
+      <Grid item xs={12}>
+
+      </Grid>
+      <Grid item xs={12}>
+
+      </Grid>
+      <Grid item xs={12}>
+
+      </Grid>
+      <Grid item xs={12}>
+
+      </Grid>
+
+      </Grid>
+      </>
       );
-    }
+
 }
 
 export default Consulta;

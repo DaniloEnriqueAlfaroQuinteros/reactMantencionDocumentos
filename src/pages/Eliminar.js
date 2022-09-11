@@ -24,26 +24,23 @@ const Eliminar = () => {
 
     const [dialogValidation,setDialogValidation] = React.useState(false);
     const [dialogDeleteConfirmation,setDialogDeleteConfirmation] = React.useState(false);
-
-    const state={
-        form:{
-            tipodoc: '',
-            fechainicial: '',
-            fechafinal: ''
-        }
-    }
+    const [eliminaForm, setEliminaForm] = React.useState({
+        tipoDoc: "",
+        fechaIni: "",
+        fechaFin: "",
+      });
 
     const handleChange = async (e) =>{
-        this.setState({
-            form:{
-                ...state.form,
+        setEliminaForm({
+            
+                ...eliminaForm,
                 [e.target.name]: e.target.value
-            }
+            
         });
     }
 
     const eliminarDoc = async()=>{
-        await axios.get(baseUrl, {params: {tipodoc: state.form.tipodoc, fechainicial: state.form.fechainicial, fechafinal: state.form.fechafinal}})
+        await axios.get(baseUrl, {params: {tipodoc: eliminaForm.tipoDoc, fechainicial: eliminaForm.fechaIni, fechafinal: eliminaForm.fechaFin}})
         .then(response=>{
             return response.data;
         })
@@ -76,9 +73,6 @@ const Eliminar = () => {
             gap={1}
             id="PageGrid"
           >
-             <Grid item xs={12}>
-
-            </Grid>
             <Grid item xs={1}>
 
             </Grid>
@@ -115,7 +109,8 @@ const Eliminar = () => {
                 <TextField id="outlined-basic" label="Tipo documento" variant="outlined"
                 type="text"
                 className="form-control"
-                name="tipodoc"
+                name="tipoDoc"
+                value={eliminaForm.tipoDoc}
                 onChange={handleChange}
                 />
                 </Grid>
@@ -125,6 +120,7 @@ const Eliminar = () => {
                 type="text"
                 className="form-control"
                 name="fechainicial"
+                value={eliminaForm.fechaIni}
                 onChange={handleChange}
                 />
                 </Grid>
@@ -134,6 +130,7 @@ const Eliminar = () => {
                 type="text"
                 className="form-control"
                 name="fechafinal"
+                value={eliminaForm.fechaFin}
                 onChange={handleChange}
                 />
                 </Grid>
