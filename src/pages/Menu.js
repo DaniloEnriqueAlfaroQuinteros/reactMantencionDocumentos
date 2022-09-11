@@ -3,35 +3,17 @@ import Cookies from 'universal-cookie';
 import '../css/Menu.css';
 import Logo from '../../src/static/Logo.jpg';
 import {
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
+
     Button,
     Grid,
-    TextField,
-    Typography,
-    DialogContentText,
+
   } from '@mui/material';
-  import PlayCircleFilledWhiteOutlinedIcon from '@mui/icons-material/PlayCircleFilledWhiteOutlined';
+import AccountMenu from '../components/AccountMenu.js';
 
 const cookies = new Cookies();
 
 const Menu = () => {
 
-    const cerrarSesion = () =>{
-        cookies.remove('id', {path: "/"});
-        cookies.remove('apellido_paterno', {path: "/"});
-        cookies.remove('apellido_materno', {path: "/"});
-        cookies.remove('nombre', {path: "/"});
-        cookies.remove('username', {path: "/"});
-        cookies.remove('tipodoc', {path: "/"});
-        cookies.remove('sucursal', {path: "/"});
-        cookies.remove('correlativo', {path: "/"});
-        cookies.remove('fechainical', {path: "/"});
-        cookies.remove('fechafinal', {path: "/"});
-        window.location.href='./';
-    }
     const consultaDoc=()=>{
         cookies.remove('id', {path: "/"});
         cookies.remove('apellido_paterno', {path: "/"});
@@ -80,14 +62,20 @@ const Menu = () => {
             <Grid item xs={1}>
 
             </Grid>
-            <Grid item xs={6} textAlign="left" >
+            <Grid item xs={2} textAlign="left" >
             <img
                 src={Logo}
                 width={50} height={50}
                 style={{borderRadius: '50%'}}
                 />
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={6}>
+            
+            </Grid>
+            <Grid item xs={2} textAlign="right">
+            <AccountMenu/>
+            </Grid>
+            <Grid item xs={1}>
             
             </Grid>
             <Grid item xs={12}>
@@ -128,12 +116,7 @@ const Menu = () => {
                 </Grid>
                
                 <Grid item xs={12}>
-                <Button variant="contained"  onClick={()=> 
-                {
-                    
-                    cerrarSesion();
-                    
-                }} style={{maxWidth: '250px', maxHeight: '40px', minWidth: '250px', minHeight: '40px'}}>  Cerrar  sesion  </Button>
+                
                 </Grid>
                 <Grid item xs={12}>
                 
