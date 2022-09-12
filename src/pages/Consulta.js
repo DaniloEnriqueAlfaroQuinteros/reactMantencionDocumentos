@@ -16,6 +16,7 @@ import {
     Typography,
     DialogContentText,
   } from '@mui/material';
+import { DataObject } from '@mui/icons-material';
 
 const baseUrl="http://localhost:3002/documentos";
 const cookies = new Cookies();
@@ -27,8 +28,16 @@ const Consulta = () => {
     sucursal: "",
     correlativo: "",
   });
-  const [responseData, setResponseData] = React.useState(Object);
-   
+  const [responseData, setResponseData] = React.useState(DataObject);
+  const documentData = {
+    tipodoc: "",
+    sucursal: "",
+    correlativo: "",
+    mail: "",
+    fechaRegistro: "",
+    estado: ""
+
+  }
   const handleChange = async (e) =>{
       setConsultaForm({
            
@@ -42,6 +51,9 @@ const Consulta = () => {
         await axios.get(baseUrl, {params: {tipodoc: consultaForm.tipoDoc, sucursal: consultaForm.sucursal, correlativo: consultaForm.correlativo}})
         .then(response=>{
             setResponseData(response.data);
+
+
+            
             return response.data;
         })
         .then(response=>{
@@ -50,6 +62,12 @@ const Consulta = () => {
                 cookies.set('tipodoc', respuesta.tipodoc, {path: "/"});
                 cookies.set('sucursal', respuesta.sucursal, {path: "/"});
                 cookies.set('correlativo', respuesta.correlativo, {path: "/"});
+                documentData.tipodoc = responseData[0].correlativo;
+                documentData.sucursal =  responseData[0].correlativo;
+                documentData.correlativo= responseData[0].correlativo;
+                documentData.mail= responseData[0].correlativo;
+                documentData.fechaRegistro= responseData[0].correlativo;
+                documentData.estado= responseData[0].correlativo
             }else{
                 alert('Documento NO Encontrado');
             }
@@ -190,22 +208,22 @@ const Consulta = () => {
 
           </Grid>
           <Grid item xs={1}>
-          <Typography> {responseData.tipodoc}</Typography>
+          <Typography> {documentData.tipodoc}</Typography>
           </Grid>
           <Grid item xs={1}>
-          <Typography> {responseData.sucursal}</Typography>
+          <Typography> {documentData.sucursal}</Typography>
           </Grid>
           <Grid item xs={1}>
-          <Typography>{responseData.correlativo}</Typography>
+          <Typography>{documentData.correlativo}</Typography>
           </Grid>
           <Grid item xs={1}>
-          <Typography>{responseData.mail}</Typography>
+          <Typography>{documentData.mail}</Typography>
           </Grid>
           <Grid item xs={1}>
-          <Typography>{responseData.fechaRegistro}</Typography>
+          <Typography>{documentData.fechaRegistro}</Typography>
           </Grid>
           <Grid item xs={1}>
-          <Typography>{responseData.estado}</Typography>
+          <Typography>{documentData.estado}</Typography>
           </Grid>
           <Grid item xs={3}>
 
