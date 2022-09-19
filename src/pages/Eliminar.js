@@ -30,6 +30,17 @@ const Eliminar = () => {
         fechaFin: "",
       });
 
+    const documentData = {
+      tipodoc: "",
+      sucursal: "",
+      correlativo: "",
+      mail: "",
+      fechaRegistro: "",
+      estado: ""
+    
+    }  
+    const [responseData, setResponseData] = React.useState(documentData);
+
     const handleChange = async (e) =>{
         setEliminaForm({
             
@@ -40,26 +51,23 @@ const Eliminar = () => {
     }
 
     const eliminarDoc = async()=>{
-        await axios.get(baseUrl, {params: {tipodoc: eliminaForm.tipoDoc, fechainicial: eliminaForm.fechaIni, fechafinal: eliminaForm.fechaFin}})
-        .then(response=>{
-            return response.data;
-        })
-        .then(response=>{
-            if(response.length>0){
-                let respuesta=response[0];
-                cookies.set('tipodoc', respuesta.tipodoc, {path: "/"});
-                cookies.set('fechainicial', respuesta.sucursal, {path: "/"});
-                cookies.set('fechafinal', respuesta.correlativo, {path: "/"});
-                setDialogDeleteConfirmation(true);
-                
-            }else{
-                setDialogValidation(true)
-            }
-        })
+        await axios.get(baseUrl, {params: {tipodoc: eliminaForm.tipoDoc, fechaRegistro: eliminaForm.fechaIni}})
         .catch(error=>{
-            console.log(error);
-            setDialogValidation(true)
+          setDialogValidation(true);
+      })
+        .then(response=>{
+          if (typeof response.data[0] === 'undefined') {
+            setDialogValidation(true);
+
+          }else{
+            setResponseData(response.data[0]);
+            console.log(response.status);
+            console.log(response.data[0]);
+            setDialogDeleteConfirmation(true);
+            return response.data;
+          }
         })
+
 
     }
     
@@ -119,7 +127,7 @@ const Eliminar = () => {
                 <TextField id="outlined-basic" label="Fecha inicial" variant="outlined"
                 type="text"
                 className="form-control"
-                name="fechainicial"
+                name="fechaIni"
                 value={eliminaForm.fechaIni}
                 onChange={handleChange}
                 />
@@ -129,7 +137,7 @@ const Eliminar = () => {
                 <TextField id="outlined-basic" label="Fecha final" variant="outlined"
                 type="text"
                 className="form-control"
-                name="fechafinal"
+                name="fechaFin"
                 value={eliminaForm.fechaFin}
                 onChange={handleChange}
                 />
