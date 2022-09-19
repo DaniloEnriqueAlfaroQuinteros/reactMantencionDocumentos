@@ -22,22 +22,26 @@ const baseUrl="http://localhost:3002/documentos";
 const cookies = new Cookies();
 
 const Consulta = () => {
-
+  const [dialogDocumentFound,setDialogDocumentFound] = React.useState(false);
+  const [dialogDocumentNotFound,setDialogDocumentNotFound] = React.useState(false);
   const [consultaForm, setConsultaForm] = React.useState({
     tipoDoc: "",
     sucursal: "",
     correlativo: "",
   });
-  const [responseData, setResponseData] = React.useState(DataObject);
+
   const documentData = {
-    tipodoc: "",
-    sucursal: "",
-    correlativo: "",
-    mail: "",
-    fechaRegistro: "",
-    estado: ""
+    tipodoc: "0",
+    sucursal: "0",
+    correlativo: "0",
+    mail: "0",
+    fechaRegistro: "0",
+    estado: "0"
 
   }
+
+  const [responseData, setResponseData] = React.useState(documentData);
+
   const handleChange = async (e) =>{
       setConsultaForm({
            
@@ -48,33 +52,30 @@ const Consulta = () => {
   }
 
     const consultaDoc=async()=>{
+      try{
         await axios.get(baseUrl, {params: {tipodoc: consultaForm.tipoDoc, sucursal: consultaForm.sucursal, correlativo: consultaForm.correlativo}})
-        .then(response=>{
-            setResponseData(response.data);
-
-
-            
-            return response.data;
-        })
-        .then(response=>{
-            if(response.length>0){
-                let respuesta=response[0];
-                cookies.set('tipodoc', respuesta.tipodoc, {path: "/"});
-                cookies.set('sucursal', respuesta.sucursal, {path: "/"});
-                cookies.set('correlativo', respuesta.correlativo, {path: "/"});
-                documentData.tipodoc = responseData[0].correlativo;
-                documentData.sucursal =  responseData[0].correlativo;
-                documentData.correlativo= responseData[0].correlativo;
-                documentData.mail= responseData[0].correlativo;
-                documentData.fechaRegistro= responseData[0].correlativo;
-                documentData.estado= responseData[0].correlativo
-            }else{
-                alert('Documento NO Encontrado');
-            }
-        })
         .catch(error=>{
-            console.log(error);
+          setDialogDocumentNotFound(true);
         })
+        .then(response=>{
+          if (typeof response.data[0] === 'undefined') {
+            setDialogDocumentNotFound(true);
+
+          }else{
+            setResponseData(response.data[0]);
+            console.log(response.status);
+            console.log(response.data[0]);
+            setDialogDocumentFound(true);
+            return response.data;
+          }
+        });
+      }
+      catch(e){
+        setDialogDocumentNotFound(true);
+        console.log(e);
+      }
+
+
 
     }
     const volver = () => {
@@ -178,73 +179,10 @@ const Consulta = () => {
       <Grid item xs={5}>
 
       </Grid>
-      <Grid container textAlign="Center" rowSpacing={1} xs={12}>
-          <Grid item xs={3}>
 
-          </Grid>
-          <Grid item xs={1}>
-            <Typography > Tipo Documento</Typography>
-          </Grid>
-          <Grid item xs={1}>
-            <Typography> Sucursal</Typography>
-          </Grid>
-          <Grid item xs={1}>
-          <Typography> Correlativo</Typography>
-          </Grid>
-          <Grid item xs={1}>
-          <Typography> Mail</Typography>
-          </Grid>
-          <Grid item xs={1}>
-          <Typography> Fecha de registro</Typography>
-          </Grid>
-          <Grid item xs={1}>
-          <Typography> Estado</Typography>
-          </Grid>
-          <Grid item xs={3}>
-
-          </Grid>
-
-          <Grid item xs={3}>
-
-          </Grid>
-          <Grid item xs={1}>
-          <Typography> {documentData.tipodoc}</Typography>
-          </Grid>
-          <Grid item xs={1}>
-          <Typography> {documentData.sucursal}</Typography>
-          </Grid>
-          <Grid item xs={1}>
-          <Typography>{documentData.correlativo}</Typography>
-          </Grid>
-          <Grid item xs={1}>
-          <Typography>{documentData.mail}</Typography>
-          </Grid>
-          <Grid item xs={1}>
-          <Typography>{documentData.fechaRegistro}</Typography>
-          </Grid>
-          <Grid item xs={1}>
-          <Typography>{documentData.estado}</Typography>
-          </Grid>
-          <Grid item xs={3}>
-
-          </Grid>
-      </Grid>
 
 
       <Grid item xs={12}>
-
-      </Grid>
-      <Grid item xs={4}>
-
-      </Grid>
-      <Grid item xs={4}>
-      <Button variant="contained"  onClick={()=>
-            { 
-              enviar()
-            }
-            } style={{maxWidth: '250px', maxHeight: '40px', minWidth: '250px', minHeight: '40px'}}> enviar </Button>
-      </Grid>
-      <Grid item xs={4}>
 
       </Grid>
 
@@ -268,6 +206,49 @@ const Consulta = () => {
       </Grid>
 
       </Grid>
+
+
+      <Dialog
+        open={dialogDocumentFound}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Documento encontrado!"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+          Tipo de Documento: {responseData.tipodoc} - Sucursal: {responseData.sucursal} - Correlativo: {responseData.correlativo} - Email: {responseData.mail} - Fecha de registro: {responseData.fechaRegistro} - Estado: {responseData.estado}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDialogDocumentFound(false)}>
+            Enviar
+          </Button>
+        </DialogActions>
+    </Dialog>
+
+    <Dialog
+        open={dialogDocumentNotFound}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Ups!, algo salió mal..."}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+          Documento no encontrado, favor reintentar con documento valido. 
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDialogDocumentNotFound(false)}>
+            Aceptar
+          </Button>
+        </DialogActions>
+    </Dialog>
+
+      
       </>
       );
 
