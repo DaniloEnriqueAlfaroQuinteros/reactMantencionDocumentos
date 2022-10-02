@@ -21,17 +21,26 @@ import {
     Typography,
     DialogContentText,
   } from '@mui/material';
-import { DataObject } from '@mui/icons-material';
+import { ArrowDropDownSharp, DataObject } from '@mui/icons-material';
 
 const baseUrl="http://localhost:3002/documentos";
 const cookies = new Cookies();
 
-
 const Consulta = () => {
-  var rows = [];
+  var rows = [
+    {
+      id: "",
+      tipoDocumento: "", 
+      sucursal: "", 
+      correlativo: "", 
+      mail: "", 
+      fechaRegistro: "", 
+      estado: ""
+    }
+  ]; 
   const [dialogDocumentFound,setDialogDocumentFound] = React.useState(false);
-  const [listaDoc,setListaDoc] = React.useState(rows);
-  const [listaNumCol,setListaNumCol] = React.useState(0);
+  const [listaDoc,setListaDoc] = React.useState([]);
+  //const [listaNumCol,setListaNumCol] = React.useState(0);
   const [listaEleCol,setListaEleCol] = React.useState(1);
   const [dialogDocumentNotFound,setDialogDocumentNotFound] = React.useState(false);
   const [consultaForm, setConsultaForm] = React.useState({
@@ -51,7 +60,7 @@ const Consulta = () => {
   }
 
 
-  const [responseData, setResponseData] = React.useState(documentData);
+  const [responseData, setResponseData] = React.useState([]);
 
   const handleChange = async (e) =>{
       setConsultaForm({
@@ -75,13 +84,6 @@ const Consulta = () => {
           }else{
             
             setResponseData(response.data[0]);
-            console.log(response.status);
-            console.log(response.data[0]);
-            rows.push({ id: listaEleCol, tipoDocumento: responseData.tipodoc, sucursal: responseData.sucursal, correlativo: responseData.correlativo, mail: responseData.mail, fechaRegistro: responseData.fechaRegistro, estado: responseData.estado });
-            setListaDoc(rows);
-            console.log(rows.length);
-            //console.log(listaDoc);
-            setListaEleCol(listaEleCol+1);
             setDialogDocumentFound(true);
             return response.data;
           }
@@ -144,6 +146,27 @@ const Consulta = () => {
 
     ]
     ;
+    const addGrilla = () =>{
+    /*  console.log("numero de id es: ");
+      console.log(listaNumCol);
+      console.log("Row es: ");
+      console.log(rows);
+      console.log("lista de grilla antes: ");
+      console.log(listaDoc);
+      console.log("Row en posicion ID es: ");
+      console.log(rows[listaNumCol]);*/
+      setListaDoc(rows); 
+      
+      /*console.log("Longitud Rows: ");
+      console.log(rows.length);
+      console.log("Longitud lista grilla: ");
+      console.log(listaDoc.length);
+      console.log("Lista de grilla despues: ");
+      console.log(listaDoc);
+      console.log("numero de elemento es: ");
+      console.log(listaEleCol);*/
+    }
+    
 
         return (
       <>
@@ -217,7 +240,11 @@ const Consulta = () => {
       <Grid item xs={2}>
       <Button variant="contained"  endIcon={<FindInPageIcon />} onClick={()=>
             { 
-              consultaDoc()
+              consultaDoc();
+              rows =[...rows,{ id: listaEleCol, tipoDocumento: responseData.tipodoc, sucursal: responseData.sucursal, correlativo: responseData.correlativo, mail: responseData.mail, fechaRegistro: responseData.fechaRegistro, estado: responseData.estado }];
+              addGrilla();
+              setListaEleCol(listaEleCol+1);
+
              
             }
             } style={{maxWidth: '250px', maxHeight: '55px', minWidth: '250px', minHeight: '55px'}}> Consulta  documento </Button>
