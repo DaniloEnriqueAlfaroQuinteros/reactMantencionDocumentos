@@ -100,12 +100,6 @@ const cerrarSesion = () =>{
         <Divider />
         <MenuItem>
           <ListItemIcon>
-            <PersonAdd fontSize="small" />
-          </ListItemIcon>
-          Agregar cuentas
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
           Configuraciones
