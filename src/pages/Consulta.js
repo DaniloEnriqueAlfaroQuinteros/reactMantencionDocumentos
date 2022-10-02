@@ -22,7 +22,11 @@ const baseUrl="http://localhost:3002/documentos";
 const cookies = new Cookies();
 
 const Consulta = () => {
+
   const [dialogDocumentFound,setDialogDocumentFound] = React.useState(false);
+  const [listaDoc,setListaDoc] = React.useState([]);
+  const [listaNumCol,setListaNumCol] = React.useState(0);
+  const [listaEleCol,setListaEleCol] = React.useState(1);
   const [dialogDocumentNotFound,setDialogDocumentNotFound] = React.useState(false);
   const [consultaForm, setConsultaForm] = React.useState({
     tipoDoc: "",
@@ -85,7 +89,13 @@ const Consulta = () => {
       window.location.href='./Menu';
     }
     
-
+    const addNumbers = () =>{
+      listaDoc[listaNumCol] = listaEleCol;
+      console.log(listaDoc[listaNumCol]);
+      setListaDoc(listaDoc);
+      setListaNumCol(listaNumCol+1);
+      setListaEleCol(listaEleCol+1);
+    }
    
         return (
       <>
@@ -168,7 +178,7 @@ const Consulta = () => {
           <Grid item xs={12}>
           <Button variant="contained"  onClick={()=>
             { 
-              volver()
+              addNumbers();
             }
             } style={{maxWidth: '250px', maxHeight: '40px', minWidth: '250px', minHeight: '40px'}}> volver </Button>
           </Grid>
@@ -183,7 +193,10 @@ const Consulta = () => {
 
 
       <Grid item xs={12}>
-
+      <ul>{
+      listaDoc.map((listaDoc) =>
+        <li>{listaDoc}</li>
+      )}</ul>
       </Grid>
 
       <Grid item xs={12}>
