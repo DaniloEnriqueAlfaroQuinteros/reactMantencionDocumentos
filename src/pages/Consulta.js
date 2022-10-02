@@ -25,22 +25,13 @@ import { ArrowDropDownSharp, DataObject } from '@mui/icons-material';
 
 const baseUrl="http://localhost:3002/documentos";
 const cookies = new Cookies();
+var rows = new Array();
 
 const Consulta = () => {
-  var rows = [
-    {
-      id: "",
-      tipoDocumento: "", 
-      sucursal: "", 
-      correlativo: "", 
-      mail: "", 
-      fechaRegistro: "", 
-      estado: ""
-    }
-  ]; 
+
   const [dialogDocumentFound,setDialogDocumentFound] = React.useState(false);
   const [listaDoc,setListaDoc] = React.useState([]);
-  //const [listaNumCol,setListaNumCol] = React.useState(0);
+  const [listaNumCol,setListaNumCol] = React.useState(0);
   const [listaEleCol,setListaEleCol] = React.useState(1);
   const [dialogDocumentNotFound,setDialogDocumentNotFound] = React.useState(false);
   const [consultaForm, setConsultaForm] = React.useState({
@@ -85,6 +76,10 @@ const Consulta = () => {
             
             setResponseData(response.data[0]);
             setDialogDocumentFound(true);
+            rows =[...rows,{ id: listaEleCol, tipoDocumento: responseData.tipodoc, sucursal: responseData.sucursal, correlativo: responseData.correlativo, mail: responseData.mail, fechaRegistro: responseData.fechaRegistro, estado: responseData.estado }];
+            setListaDoc(rows); 
+            setListaEleCol(listaEleCol+1);
+            console.log(listaDoc);
             return response.data;
           }
         });
@@ -146,26 +141,7 @@ const Consulta = () => {
 
     ]
     ;
-    const addGrilla = () =>{
-    /*  console.log("numero de id es: ");
-      console.log(listaNumCol);
-      console.log("Row es: ");
-      console.log(rows);
-      console.log("lista de grilla antes: ");
-      console.log(listaDoc);
-      console.log("Row en posicion ID es: ");
-      console.log(rows[listaNumCol]);*/
-      setListaDoc(rows); 
-      
-      /*console.log("Longitud Rows: ");
-      console.log(rows.length);
-      console.log("Longitud lista grilla: ");
-      console.log(listaDoc.length);
-      console.log("Lista de grilla despues: ");
-      console.log(listaDoc);
-      console.log("numero de elemento es: ");
-      console.log(listaEleCol);*/
-    }
+
     
 
         return (
@@ -241,9 +217,6 @@ const Consulta = () => {
       <Button variant="contained"  endIcon={<FindInPageIcon />} onClick={()=>
             { 
               consultaDoc();
-              rows =[...rows,{ id: listaEleCol, tipoDocumento: responseData.tipodoc, sucursal: responseData.sucursal, correlativo: responseData.correlativo, mail: responseData.mail, fechaRegistro: responseData.fechaRegistro, estado: responseData.estado }];
-              addGrilla();
-              setListaEleCol(listaEleCol+1);
 
              
             }
@@ -299,7 +272,7 @@ const Consulta = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDialogDocumentFound(false)}>
-            Enviar
+            Aceptar
           </Button>
         </DialogActions>
     </Dialog>
