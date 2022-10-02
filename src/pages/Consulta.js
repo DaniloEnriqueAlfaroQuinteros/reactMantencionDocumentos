@@ -5,6 +5,11 @@ import axios from 'axios';
 import Cookies from 'universal-cookie';
 import Logo from '../../src/static/Logo.jpg';
 import AccountMenu from '../components/AccountMenu.js';
+import { DataGrid } from '@mui/x-data-grid';
+import Box from '@mui/material/Box';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import FindInPageIcon from '@mui/icons-material/FindInPage';
+import InputIcon from '@mui/icons-material/Input';
 import {
     Dialog,
     DialogActions,
@@ -21,10 +26,11 @@ import { DataObject } from '@mui/icons-material';
 const baseUrl="http://localhost:3002/documentos";
 const cookies = new Cookies();
 
-const Consulta = () => {
 
+const Consulta = () => {
+  var rows = [];
   const [dialogDocumentFound,setDialogDocumentFound] = React.useState(false);
-  const [listaDoc,setListaDoc] = React.useState([]);
+  const [listaDoc,setListaDoc] = React.useState(rows);
   const [listaNumCol,setListaNumCol] = React.useState(0);
   const [listaEleCol,setListaEleCol] = React.useState(1);
   const [dialogDocumentNotFound,setDialogDocumentNotFound] = React.useState(false);
@@ -43,6 +49,7 @@ const Consulta = () => {
     estado: "0"
 
   }
+
 
   const [responseData, setResponseData] = React.useState(documentData);
 
@@ -66,9 +73,15 @@ const Consulta = () => {
             setDialogDocumentNotFound(true);
 
           }else{
+            
             setResponseData(response.data[0]);
             console.log(response.status);
             console.log(response.data[0]);
+            rows.push({ id: listaEleCol, tipoDocumento: responseData.tipodoc, sucursal: responseData.sucursal, correlativo: responseData.correlativo, mail: responseData.mail, fechaRegistro: responseData.fechaRegistro, estado: responseData.estado });
+            setListaDoc(rows);
+            console.log(rows.length);
+            //console.log(listaDoc);
+            setListaEleCol(listaEleCol+1);
             setDialogDocumentFound(true);
             return response.data;
           }
@@ -89,21 +102,56 @@ const Consulta = () => {
       window.location.href='./Menu';
     }
     
-    const addNumbers = () =>{
-      listaDoc[listaNumCol] = listaEleCol;
-      console.log(listaDoc[listaNumCol]);
-      setListaDoc(listaDoc);
-      setListaNumCol(listaNumCol+1);
-      setListaEleCol(listaEleCol+1);
-    }
-   
+
+    const columns = [
+      { field: 'id', headerName: 'ID', width: 90, editable: false },
+      { field: 'tipoDocumento', headerName: 'Tipo documento', width: 160, editable: false },
+      {
+        field: 'sucursal',
+        headerName: 'Sucursal',
+        description: 'Sucursar donde se emitió documento.',
+        width: 150,
+        editable: false
+      },
+      {
+        field: 'correlativo',
+        headerName: 'Correlativo',
+        description: 'Correlativo de documento.',
+        width: 150,
+        editable: false
+      },
+      {
+        field: 'mail',
+        headerName: 'Mail',
+        description: 'mail asociado a documento.',
+        width: 110,
+        editable: false
+      },
+      {
+        field: 'fechaRegistro',
+        headerName: 'Fecha de registro',
+        description: 'Fecha de registro de documento.',
+        sortable: false,
+        width: 160
+      },
+      {
+        field: 'estado',
+        headerName: 'Estado',
+        description: 'Estado de documento',
+        sortable: false,
+        width: 160
+      }
+
+    ]
+    ;
+
         return (
       <>
+      <Box style={{ background: "linear-gradient(#FFFFFF 10%, #2596be)", height: '100%', width: '100%'}}>
       <Grid
       container
-      style={{ background: "linear-gradient(#FFFFFF 30%, #003CFF)" }}
       textAlign="center"
-      rowSpacing={5}
+      rowSpacing={2}
       gap={1}
       id="PageGrid"
     >
@@ -119,7 +167,11 @@ const Consulta = () => {
           />
       </Grid>
       <Grid item xs={6}>
-      
+      <Button variant="contained"  endIcon={<ArrowBackIcon />} onClick={()=>
+            { 
+              volver();
+            }
+            } style={{maxWidth: '150px', maxHeight: '40px', minWidth: '150px', minHeight: '40px'}}> volver </Button>
       </Grid>
       <Grid item xs={2} textAlign="right">
       <AccountMenu/>
@@ -127,100 +179,84 @@ const Consulta = () => {
       <Grid item xs={1}>
       
       </Grid>
-      <Grid item xs={12}>
-
-      </Grid>
-
-      <Grid item xs={5}>
-
-      </Grid>
-      <Grid container textAlign="Center" rowSpacing={1} xs={2}>
-
-
-
-          <Grid item xs={12}>
-          <TextField id="outlined-basic" label="Tipo documento" variant="outlined"
+    <Grid
+      container
+      textAlign="center"
+      rowSpacing={2}
+      gap={1}
+      id="QueryGrid"
+    >
+      <Grid item xs={2}></Grid>
+      <Grid item xs={2}>
+      <TextField id="outlined-basic" label="Tipo documento" variant="outlined"
           type="text"
           className="form-control"
           name="tipoDoc"
           value={consultaForm.tipoDoc}
           onChange={handleChange}
           />
-          </Grid>
-
-          <Grid item xs={12}>
-          <TextField id="outlined-basic" label="Sucursal" variant="outlined"
+      </Grid>
+      <Grid item xs={2}>
+      <TextField id="outlined-basic" label="Sucursal" variant="outlined"
           type="text"
           className="form-control"
           name="sucursal"
           value={consultaForm.sucursal}
           onChange={handleChange}
           />
-          </Grid>
-
-          <Grid item xs={12}>
-          <TextField id="outlined-basic" label="Correlativo" variant="outlined"
+      </Grid>
+      <Grid item xs={2}>
+      <TextField  id="outlined-basic" label="Correlativo" variant="outlined"
           type="text"
           className="form-control"
           name="correlativo"
           value={consultaForm.correlativo}
           onChange={handleChange}
           />
-          </Grid>
-         
-          <Grid item xs={12}>
-          <Button variant="contained"  onClick={()=>
+      </Grid>
+      <Grid item xs={2}>
+      <Button variant="contained"  endIcon={<FindInPageIcon />} onClick={()=>
+            { 
+              consultaDoc()
+             
+            }
+            } style={{maxWidth: '250px', maxHeight: '55px', minWidth: '250px', minHeight: '55px'}}> Consulta  documento </Button>
+      </Grid>
+      <Grid item xs={2}></Grid>
+
+    </Grid>
+
+
+      </Grid>
+      <Box sx={{ height: 400, width: '100%' }}>
+      <DataGrid
+        rows={listaDoc}
+        columns={columns}
+        pageSize={10}
+        rowsPerPageOptions={[10]}
+        checkboxSelection
+        disableSelectionOnClick
+        experimentalFeatures={{ newEditingApi: true }}
+        style={{ background: "#FFFFFF" }}
+      />
+    </Box>
+    <Grid
+      container
+      textAlign="center"
+      rowSpacing={2}
+      gap={1}
+      id="Grid"
+    >
+      <Grid item xs={12}>
+      <Button variant="contained"  endIcon={<InputIcon />} onClick={()=>
             { 
               consultaDoc()
             }
-            } style={{maxWidth: '250px', maxHeight: '40px', minWidth: '250px', minHeight: '40px'}}> Consulta  documento </Button>
-          </Grid>
-          <Grid item xs={12}>
-          <Button variant="contained"  onClick={()=>
-            { 
-              addNumbers();
-            }
-            } style={{maxWidth: '250px', maxHeight: '40px', minWidth: '250px', minHeight: '40px'}}> volver </Button>
-          </Grid>
-
-          
-     
+            } style={{maxWidth: '250px', maxHeight: '55px', minWidth: '250px', minHeight: '55px'}}> Envia  documento </Button>
       </Grid>
-      <Grid item xs={5}>
-
-      </Grid>
-
-
-
-      <Grid item xs={12}>
-      <ul>{
-      listaDoc.map((listaDoc) =>
-        <li>{listaDoc}</li>
-      )}</ul>
-      </Grid>
-
-      <Grid item xs={12}>
-
-      </Grid>
-      <Grid item xs={12}>
-
-      </Grid>
-      <Grid item xs={12}>
-
-      </Grid>
-      <Grid item xs={12}>
-
-      </Grid>
-      <Grid item xs={12}>
-
-      </Grid>
-      <Grid item xs={12}>
-
-      </Grid>
-
-      </Grid>
-
-
+      
+    
+    
       <Dialog
         open={dialogDocumentFound}
         aria-labelledby="alert-dialog-title"
@@ -231,7 +267,7 @@ const Consulta = () => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-          Tipo de Documento: {responseData.tipodoc} - Sucursal: {responseData.sucursal} - Correlativo: {responseData.correlativo} - Email: {responseData.mail} - Fecha de registro: {responseData.fechaRegistro} - Estado: {responseData.estado}
+          Documento número {responseData.correlativo} encontrado en sucursal {responseData.sucursal}, presione aceptar para agregar a grilla
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -260,8 +296,22 @@ const Consulta = () => {
           </Button>
         </DialogActions>
     </Dialog>
+    <Grid item xs={12} direction="column"></Grid>
+    <Grid item xs={12} direction="column"></Grid>
+    <Grid item xs={12} direction="column"></Grid>
+    <Grid item xs={12} direction="column"></Grid>
+    <Grid item xs={12} direction="column"></Grid>
+    <Grid item xs={12} direction="column"></Grid>
+    <Grid item xs={12} direction="column"></Grid>
+    <Grid item xs={12} direction="column"></Grid>
+    <Grid item xs={12} direction="column"></Grid>
+    <Grid item xs={12} direction="column"></Grid>
+    <Grid item xs={12} direction="column"></Grid>
+    <Grid item xs={12} direction="column"></Grid>
+    <Grid item xs={12} direction="column"></Grid>
 
-      
+    </Grid>
+    </Box>  
       </>
       );
 
