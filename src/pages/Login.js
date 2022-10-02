@@ -65,6 +65,7 @@ class Login extends Component {
                 cookies.set('apellido_materno', respuesta.apellido_materno, {path: "/"});
                 cookies.set('nombre', respuesta.nombre, {path: "/"});
                 cookies.set('username', respuesta.username, {path: "/"});
+                cookies.set('userType', respuesta.userType, {path: "/"});
                 this.setState({ isLoading: false});
                 this.setState({ dialogInfo: true});
 

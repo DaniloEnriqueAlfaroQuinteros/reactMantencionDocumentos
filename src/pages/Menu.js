@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Cookies from 'universal-cookie';
 import '../css/Menu.css';
 import Logo from '../../src/static/Logo.jpg';
@@ -14,6 +14,8 @@ const cookies = new Cookies();
 
 const Menu = () => {
 
+    const [superUser,setSuperUser] = React.useState(false);
+
     const consultaDoc=()=>{
         cookies.remove('id', {path: "/"});
         cookies.remove('apellido_paterno', {path: "/"});
@@ -25,7 +27,7 @@ const Menu = () => {
         cookies.remove('fechafinal', {path: "/"});
         window.location.href='./consulta';
     }
-    const eliminarDoc=()=>{
+    const mantencionUsuarios=()=>{
         cookies.remove('id', {path: "/"});
         cookies.remove('apellido_paterno', {path: "/"});
         cookies.remove('apellido_materno', {path: "/"});
@@ -34,15 +36,18 @@ const Menu = () => {
         cookies.remove('tipodoc', {path: "/"});
         cookies.remove('fechainical', {path: "/"});
         cookies.remove('fechafinal', {path: "/"});
-        window.location.href='./eliminar';
+        window.location.href='./mantencionUsuarios';
     }
-
-
-    const componentDidMount = () => {
-        if(!cookies.get('username')){
-            window.location.href="./";
-        }
-    }
+    React.useEffect (() => {
+    
+     if(cookies.get('userType')==="1"){
+        setSuperUser(false);
+        console.log("Super user");
+     }else{
+        setSuperUser(true);
+        console.log("Not Super user");
+     }
+     }, []);
 
 
 
@@ -100,12 +105,14 @@ const Menu = () => {
             
                 </Grid>
                 <Grid item xs={12}>
-                <Button variant="contained"  onClick={()=> 
+                        
+                <Button variant="contained"  disabled={superUser} onClick={()=> 
                 {
                     
-                    eliminarDoc();
+                    mantencionUsuarios();
                     
-                }} style={{maxWidth: '250px', maxHeight: '40px', minWidth: '250px', minHeight: '40px'}}> Elimina  documentos </Button>
+                }} style={{maxWidth: '250px', maxHeight: '40px', minWidth: '250px', minHeight: '40px'}}> Mantencion usuarios </Button>
+                    
                 </Grid>
 
                 <Grid item xs={12}>
