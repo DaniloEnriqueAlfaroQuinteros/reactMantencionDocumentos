@@ -5,7 +5,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import md5 from 'md5';
 import Cookies from 'universal-cookie';
-import {GridLoader} from "react-spinners"
+import {GridLoader} from "react-spinners";
+import Box from '@mui/material/Box';
 
 import {
     Dialog,
@@ -92,6 +93,7 @@ class Login extends Component {
     render() {
         return (
             <>
+            <Box style={{ background: "linear-gradient(#FFFFFF 30%, #2596be)", height: '100%', width: '100%'}}>
             <Grid
             container
             style={{ background: "linear-gradient(#FFFFFF 30%, #003CFF)" }}
@@ -261,7 +263,7 @@ class Login extends Component {
         <GridLoader color="#FFFFFF" loading={this.state.isLoading} size={20}/>
         </DialogContent>
       </Dialog>
-
+      </Box>
           </>
         );
     }

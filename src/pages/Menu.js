@@ -2,6 +2,7 @@ import React from 'react';
 import Cookies from 'universal-cookie';
 import '../css/Menu.css';
 import Logo from '../../src/static/Logo.jpg';
+import Box from '@mui/material/Box';
 import {
 
     Button,
@@ -53,9 +54,9 @@ const Menu = () => {
 
         return (
             <>
+            <Box style={{ background: "linear-gradient(#FFFFFF 30%, #2596be)", height: '100%', width: '100%'}}>
             <Grid
             container
-            style={{ background: "linear-gradient(#FFFFFF 30%, #003CFF)" }}
             textAlign="center"
             rowSpacing={5}
             gap={1}
@@ -163,6 +164,7 @@ const Menu = () => {
             </Grid>
 
             </Grid>
+            </Box>
             </>
         );
     

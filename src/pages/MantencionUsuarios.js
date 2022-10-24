@@ -5,6 +5,14 @@ import axios from 'axios';
 import Cookies from 'universal-cookie';
 import Logo from '../../src/static/Logo.jpg';
 import AccountMenu from '../components/AccountMenu.js';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import InputAdornment from '@mui/material/InputAdornment';
+import InputLabel from '@mui/material/InputLabel';
 import {
     Dialog,
     DialogActions,
@@ -23,59 +31,83 @@ const cookies = new Cookies();
 const Eliminar = () => {
 
     const [dialogValidation,setDialogValidation] = React.useState(false);
-    const [dialogDeleteConfirmation,setDialogDeleteConfirmation] = React.useState(false);
-    const [eliminaForm, setEliminaForm] = React.useState({
-        tipoDoc: "",
-        fechaIni: "",
-        fechaFin: "",
+    const [dialogUserCreated,setDialogUserCreated] = React.useState(false);
+    const [dialogUserExist,setDialogUserExist] = React.useState(false);
+    const [creaForm, setCreaForm] = React.useState({
+        codigoUsuario: "",
+        nombreUsuario: "",
+        passFirst: "",
+        passSecond: "",
       });
+    const [values, setValues] = React.useState({
+        showPassword: false,
+    });
+    const handleClickShowPassword = () => {
+      setValues({
+        ...values,
+        showPassword: !values.showPassword,
+      });
+    };
+  
+    const handleMouseDownPassword = (event) => {
+      event.preventDefault();
+    };
 
     const documentData = {
-      tipodoc: "",
-      sucursal: "",
-      correlativo: "",
-      mail: "",
-      fechaRegistro: "",
-      estado: ""
+      message: "",
+      description: ""
     
     }  
     const [responseData, setResponseData] = React.useState(documentData);
 
     const handleChange = async (e) =>{
-        setEliminaForm({
+        setCreaForm({
             
-                ...eliminaForm,
+                ...creaForm,
                 [e.target.name]: e.target.value
             
         });
     }
 
-    const eliminarDoc = async()=>{
-        await axios.get(baseUrl, {params: {tipodoc: eliminaForm.tipoDoc, fechaRegistro: eliminaForm.fechaIni}})
+    const creaUsuario = async()=>{
+        await axios.get(baseUrl, {params: {
+          nombreUsuario: creaForm.nombreUsuario, 
+          codigoUsuario: creaForm.codigoUsuario,
+          password: creaForm.passFirst 
+                                        }})
         .catch(error=>{
           setDialogValidation(true);
       })
         .then(response=>{
-          if (typeof response.data[0] === 'undefined') {
+
+          if (typeof response.status ==! 409) {
+            setDialogUserExist(true);
+
+          }
+
+          if (typeof response.status ==! 200) {
             setDialogValidation(true);
 
           }else{
             setResponseData(response.data[0]);
             console.log(response.status);
             console.log(response.data[0]);
-            setDialogDeleteConfirmation(true);
+            setDialogUserCreated(true);
             return response.data;
           }
         })
 
 
     }
+    const volver = () => {
+      window.location.href='./Menu';
+    }
     
         return (
-      <>
+      <>  
+            <Box style={{ background: "linear-gradient(#FFFFFF 30%, #2596be)", height: '100%', width: '100%'}}>
             <Grid
             container
-            style={{ background: "linear-gradient(#FFFFFF 30%, #003CFF)" }}
             textAlign="center"
             rowSpacing={5}
             gap={1}
@@ -92,7 +124,11 @@ const Eliminar = () => {
                 />
             </Grid>
             <Grid item xs={6}>
-            
+            <Button variant="contained"  endIcon={<ArrowBackIcon />} onClick={()=>
+            { 
+              volver();
+            }
+            } style={{maxWidth: '150px', maxHeight: '40px', minWidth: '150px', minHeight: '40px'}}> volver </Button>
             </Grid>
             <Grid item xs={2} textAlign="right">
             <AccountMenu/>
@@ -114,42 +150,76 @@ const Eliminar = () => {
 
 
                 <Grid item xs={12}>
-                <TextField id="outlined-basic" label="Tipo documento" variant="outlined"
+                <TextField id="outlined-basic" label="Código Usuario" variant="outlined"
                 type="text"
                 className="form-control"
-                name="tipoDoc"
-                value={eliminaForm.tipoDoc}
+                name="codigoUsuario"
+                value={creaForm.codigoUsuario}
                 onChange={handleChange}
                 />
                 </Grid>
 
                 <Grid item xs={12}>
-                <TextField id="outlined-basic" label="Fecha inicial" variant="outlined"
+                <TextField id="outlined-basic" label="Nombre Usuario" variant="outlined"
                 type="text"
                 className="form-control"
-                name="fechaIni"
-                value={eliminaForm.fechaIni}
+                name="nombreUsuario"
+                value={creaForm.nombreUsuario}
                 onChange={handleChange}
                 />
                 </Grid>
 
                 <Grid item xs={12}>
-                <TextField id="outlined-basic" label="Fecha final" variant="outlined"
-                type="text"
+                <TextField id="outlined-basic" label="Password" variant="outlined"
+                type={values.showPassword ? 'text' : 'password'}
                 className="form-control"
-                name="fechaFin"
-                value={eliminaForm.fechaFin}
+                name="passFirst"
+                value={creaForm.passFirst}
                 onChange={handleChange}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                      >
+                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                  </InputAdornment>
+                }
+                
                 />
                 </Grid>
-               
+                <Grid item xs={12}>
+                <TextField id="outlined-basic" label="Repita password" variant="outlined"
+                type={values.showPassword ? 'text' : 'password'}
+                className="form-control"
+                name="passSecond"
+                value={creaForm.passSecond}
+                onChange={handleChange}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                      >
+                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                  </InputAdornment>
+                }
+                
+                />
+                </Grid>
                 <Grid item xs={12}>
                 <Button variant="contained"  onClick={()=> 
                 {
                     
-                    eliminarDoc();
+                    creaUsuario();
                     
-                }} style={{maxWidth: '250px', maxHeight: '40px', minWidth: '250px', minHeight: '40px'}}> Elimina  documentos </Button>
+                }} style={{maxWidth: '250px', maxHeight: '40px', minWidth: '250px', minHeight: '40px'}}> Crear usuario </Button>
                 </Grid>
                 <Grid item xs={12}>
                 
@@ -212,12 +282,37 @@ const Eliminar = () => {
 
 
     <Dialog
-        open={dialogDeleteConfirmation}
+        open={dialogUserExist}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Documento encontrado"}
+          {"Error al crear usuario"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Codigo de usuario ya existe, presione boton aceptar para confirmar.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => 
+            {
+            setDialogUserExist(false);
+            window.location.href="./menu";
+            }
+            }>
+            Aceptar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={dialogUserCreated}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Usuario creado"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -227,7 +322,7 @@ const Eliminar = () => {
         <DialogActions>
           <Button onClick={() => 
             {
-            setDialogDeleteConfirmation(false);
+            setDialogUserCreated(false);
             window.location.href="./menu";
             }
             }>
@@ -235,6 +330,9 @@ const Eliminar = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+
+      </Box>
             </>
 
         );
