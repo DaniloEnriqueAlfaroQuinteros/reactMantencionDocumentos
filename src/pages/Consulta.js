@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
-import Cookies from 'universal-cookie';
 import Logo from '../../src/static/Logo.jpg';
 import AccountMenu from '../components/AccountMenu.js';
 import { DataGrid } from '@mui/x-data-grid';
@@ -9,6 +8,7 @@ import Box from '@mui/material/Box';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import FindInPageIcon from '@mui/icons-material/FindInPage';
 import InputIcon from '@mui/icons-material/Input';
+import env from "react-dotenv";
 import {
     Dialog,
     DialogActions,
@@ -17,14 +17,12 @@ import {
     Button,
     Grid,
     TextField,
-    Typography,
     DialogContentText,
   } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
-import { ArrowDropDownSharp, DataObject } from '@mui/icons-material';
 
-const baseUrl="http://localhost:3002/documentos";
-const cookies = new Cookies();
+const baseUrl=env.URL_DOCUMENTS_GET;
+const baseUrl_post=env.URL_DOCUMENTS_POST;
 var rows = new Array();
 
 const documentBoF = [
@@ -37,29 +35,20 @@ const documentBoF = [
     label: 'FAC',
   },
 ];
+var objEnvia = new Object();
+
 
 const Consulta = () => {
 
   const [dialogDocumentFound,setDialogDocumentFound] = React.useState(false);
   const [listaDoc,setListaDoc] = React.useState([]);
-  const [listaNumCol,setListaNumCol] = React.useState(0);
-  const [listaEleCol,setListaEleCol] = React.useState(1);
+  const [listaEleCol,setListaEleCol] = React.useState(0);
   const [dialogDocumentNotFound,setDialogDocumentNotFound] = React.useState(false);
   const [consultaForm, setConsultaForm] = React.useState({
     tipoDoc: "",
     sucursal: "",
     correlativo: "",
   });
-
-  const documentData = {
-    tipodoc: "0",
-    sucursal: "0",
-    correlativo: "0",
-    mail: "0",
-    fechaRegistro: "0",
-    estado: "0"
-
-  }
 
 
   const [responseData, setResponseData] = React.useState([]);
@@ -92,10 +81,10 @@ const Consulta = () => {
             
             setResponseData(response.data[0]);
             setDialogDocumentFound(true);
-            rows =[...rows,{ id: listaEleCol, tipoDocumento: responseData.tipodoc, sucursal: responseData.sucursal, correlativo: responseData.correlativo, mail: responseData.mail, fechaRegistro: responseData.fechaRegistro, estado: responseData.estado }];
+            rows =[...rows,{ id: listaEleCol, tipoDocumento: response.data[0].tipodoc, sucursal: response.data[0].sucursal, correlativo: response.data[0].correlativo, mail: response.data[0].mail, fechaRegistro: response.data[0].fechaRegistro, estado: response.data[0].estado }];
             setListaDoc(rows); 
             setListaEleCol(listaEleCol+1);
-            console.log(listaDoc);
+            console.log(rows);
             return response.data;
           }
         });
@@ -104,14 +93,37 @@ const Consulta = () => {
         setDialogDocumentNotFound(true);
         console.log(e);
       }
-
-
-
     }
+
+    const enviaDoc=async()=>{
+      try{
+        await axios.get(baseUrl_post, {params: {tipodoc: documentTypeState, sucursal: consultaForm.sucursal, correlativo: consultaForm.correlativo}})
+        .catch(error=>{
+          setDialogDocumentNotFound(true);
+        })
+        .then(response=>{
+          if (typeof response.data[0] === 'undefined') {
+            setDialogDocumentNotFound(true);
+
+          }else{
+            
+            setResponseData(response.data[0]);
+            setDialogDocumentFound(true);
+            rows =[...rows,{ id: listaEleCol, tipoDocumento: response.data[0].tipodoc, sucursal: response.data[0].sucursal, correlativo: response.data[0].correlativo, mail: response.data[0].mail, fechaRegistro: response.data[0].fechaRegistro, estado: response.data[0].estado }];
+            setListaDoc(rows); 
+            setListaEleCol(listaEleCol+1);
+            console.log(rows);
+            return response.data;
+          }
+        });
+      }
+      catch(e){
+        setDialogDocumentNotFound(true);
+        console.log(e);
+      }
+    }
+
     const volver = () => {
-      window.location.href='./Menu';
-    }
-    const enviar = () => {
       window.location.href='./Menu';
     }
     
@@ -252,7 +264,16 @@ const Consulta = () => {
       </Grid>
       <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={listaDoc}
+        rows={rows}
+        onSelectionModelChange={(ids) => {
+          const selectedIDs = new Set(ids);
+          const selectedRowData = rows.filter((row) =>
+            selectedIDs.has(row.id));
+          console.log(typeof(selectedRowData));
+          console.log(selectedRowData);
+          objEnvia = selectedRowData;
+          console.log(JSON.stringify(objEnvia));
+        }}
         columns={columns}
         pageSize={10}
         rowsPerPageOptions={[10]}
@@ -260,6 +281,7 @@ const Consulta = () => {
         disableSelectionOnClick
         experimentalFeatures={{ newEditingApi: true }}
         style={{ background: "#FFFFFF" }}
+        
       />
     </Box>
     <Grid
@@ -272,7 +294,7 @@ const Consulta = () => {
       <Grid item xs={12}>
       <Button variant="contained"  endIcon={<InputIcon />} onClick={()=>
             { 
-              consultaDoc()
+              enviaDoc()
             }
             } style={{maxWidth: '250px', maxHeight: '55px', minWidth: '250px', minHeight: '55px'}}> Envia  documento </Button>
       </Grid>

@@ -5,6 +5,7 @@ import md5 from 'md5';
 import Cookies from 'universal-cookie';
 import {GridLoader} from "react-spinners";
 import Box from '@mui/material/Box';
+import env from "react-dotenv";
 
 import {
     Dialog,
@@ -19,7 +20,8 @@ import {
   } from '@mui/material';
   import PlayCircleFilledWhiteOutlinedIcon from '@mui/icons-material/PlayCircleFilledWhiteOutlined';
 
-const baseUrl="http://localhost:3002/usuarios";
+const baseUrl=env.URL_LOGIN;
+
 const cookies = new Cookies();
 
 class Login extends Component {

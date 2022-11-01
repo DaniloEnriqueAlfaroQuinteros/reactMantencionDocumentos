@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import axios from 'axios';
-import Cookies from 'universal-cookie';
 import Logo from '../../src/static/Logo.jpg';
 import AccountMenu from '../components/AccountMenu.js';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -9,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import InputAdornment from '@mui/material/InputAdornment';
+import env from "react-dotenv";
 import {
     Dialog,
     DialogActions,
@@ -17,12 +17,10 @@ import {
     Button,
     Grid,
     TextField,
-    Typography,
     DialogContentText,
   } from '@mui/material';
 
-const baseUrl="http://localhost:3002/documentos";
-const cookies = new Cookies();
+  const baseUrl=env.URL_REGISTERUSERS;
 
 const UserMantainer = () => {
 
