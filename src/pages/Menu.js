@@ -1,6 +1,5 @@
 import React from 'react';
 import Cookies from 'universal-cookie';
-import '../css/Menu.css';
 import Logo from '../../src/static/Logo.jpg';
 import Box from '@mui/material/Box';
 import {

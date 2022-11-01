@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import '../css/Consulta.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
@@ -21,11 +20,23 @@ import {
     Typography,
     DialogContentText,
   } from '@mui/material';
+import MenuItem from '@mui/material/MenuItem';
 import { ArrowDropDownSharp, DataObject } from '@mui/icons-material';
 
 const baseUrl="http://localhost:3002/documentos";
 const cookies = new Cookies();
 var rows = new Array();
+
+const documentBoF = [
+  {
+    value: 'BLT',
+    label: 'BLT',
+  },
+  {
+    value: 'FME',
+    label: 'FAC',
+  },
+];
 
 const Consulta = () => {
 
@@ -61,10 +72,15 @@ const Consulta = () => {
      
         });
   }
+  const [documentTypeState, setDocumentTypeState] = React.useState('BLT');
+
+  const handleChangeDocumentType = (event) => {
+    setDocumentTypeState(event.target.value);
+  };
 
     const consultaDoc=async()=>{
       try{
-        await axios.get(baseUrl, {params: {tipodoc: consultaForm.tipoDoc, sucursal: consultaForm.sucursal, correlativo: consultaForm.correlativo}})
+        await axios.get(baseUrl, {params: {tipodoc: documentTypeState, sucursal: consultaForm.sucursal, correlativo: consultaForm.correlativo}})
         .catch(error=>{
           setDialogDocumentNotFound(true);
         })
@@ -188,12 +204,18 @@ const Consulta = () => {
       <Grid item xs={2}></Grid>
       <Grid item xs={2}>
       <TextField id="outlined-basic" label="Tipo documento" variant="outlined"
-          type="text"
+          select
           className="form-control"
           name="tipoDoc"
-          value={consultaForm.tipoDoc}
-          onChange={handleChange}
-          />
+          value={documentTypeState}
+          onChange={handleChangeDocumentType}
+       >
+                  {documentBoF.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
       </Grid>
       <Grid item xs={2}>
       <TextField id="outlined-basic" label="Sucursal" variant="outlined"

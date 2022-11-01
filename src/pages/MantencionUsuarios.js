@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import '../css/Consulta.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
 import Logo from '../../src/static/Logo.jpg';
@@ -8,11 +6,9 @@ import AccountMenu from '../components/AccountMenu.js';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import OutlinedInput from '@mui/material/OutlinedInput';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import InputAdornment from '@mui/material/InputAdornment';
-import InputLabel from '@mui/material/InputLabel';
 import {
     Dialog,
     DialogActions,
@@ -28,7 +24,7 @@ import {
 const baseUrl="http://localhost:3002/documentos";
 const cookies = new Cookies();
 
-const Eliminar = () => {
+const UserMantainer = () => {
 
     const [dialogValidation,setDialogValidation] = React.useState(false);
     const [dialogUserCreated,setDialogUserCreated] = React.useState(false);
@@ -339,4 +335,4 @@ const Eliminar = () => {
     
 }
 
-export default Eliminar;
+export default UserMantainer;
