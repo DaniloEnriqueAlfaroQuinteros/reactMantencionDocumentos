@@ -69,19 +69,22 @@ const Consulta = () => {
 
     const consultaDoc=async()=>{
       try{
-        await axios.get(baseUrl, {params: {tipodoc: documentTypeState, sucursal: consultaForm.sucursal, correlativo: consultaForm.correlativo}})
-        .catch(error=>{
+        const URL=baseUrl+"/"+consultaForm.correlativo;
+        /*const headers = { "Content-Type": "application/json", 
+                          "Access-Control-Allow-Origin": "*" };*/
+        await axios.get(URL)
+        .catch(error=>{ 
           setDialogDocumentNotFound(true);
         })
         .then(response=>{
-          if (typeof response.data[0] === 'undefined') {
+          if (typeof response === 'undefined') {
             setDialogDocumentNotFound(true);
 
           }else{
-            
-            setResponseData(response.data[0]);
+            console.log(response.data);
+            setResponseData(response.data);
             setDialogDocumentFound(true);
-            rows =[...rows,{ id: listaEleCol, tipoDocumento: response.data[0].tipodoc, sucursal: response.data[0].sucursal, correlativo: response.data[0].correlativo, mail: response.data[0].mail, fechaRegistro: response.data[0].fechaRegistro, estado: response.data[0].estado }];
+            rows =[...rows,{ id: listaEleCol, tipoDocumento: response.data.tipodoc, sucursal: response.data.sucursal, correlativo: response.data.correlativo, mail: response.data.mail, fechaRegistro: response.data.fecha, estado: response.data.estado }];
             setListaDoc(rows); 
             setListaEleCol(listaEleCol+1);
             console.log(rows);
@@ -90,6 +93,7 @@ const Consulta = () => {
         });
       }
       catch(e){
+        
         setDialogDocumentNotFound(true);
         console.log(e);
       }
@@ -109,7 +113,7 @@ const Consulta = () => {
             
             setResponseData(response.data[0]);
             setDialogDocumentFound(true);
-            rows =[...rows,{ id: listaEleCol, tipoDocumento: response.data[0].tipodoc, sucursal: response.data[0].sucursal, correlativo: response.data[0].correlativo, mail: response.data[0].mail, fechaRegistro: response.data[0].fechaRegistro, estado: response.data[0].estado }];
+            rows =[...rows,{ id: listaEleCol, tipoDocumento: response.data[0].tipodoc, sucursal: response.data[0].sucursal, correlativo: response.data[0].correlativo, mail: response.data[0].mail, fechaRegistro: response.data[0].fecha, estado: response.data[0].estado }];
             setListaDoc(rows); 
             setListaEleCol(listaEleCol+1);
             console.log(rows);
