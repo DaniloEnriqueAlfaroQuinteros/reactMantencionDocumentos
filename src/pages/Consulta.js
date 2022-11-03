@@ -44,6 +44,8 @@ const Consulta = () => {
   const [listaDoc,setListaDoc] = React.useState([]);
   const [listaEleCol,setListaEleCol] = React.useState(0);
   const [dialogDocumentNotFound,setDialogDocumentNotFound] = React.useState(false);
+  const [dialogDocumentSend,setDialogDocumentSend] = React.useState(false);
+  const [dialogDocumentNotSend,setDialogDocumentNotSend] = React.useState(false);
   const [consultaForm, setConsultaForm] = React.useState({
     tipoDoc: "",
     sucursal: "",
@@ -100,35 +102,45 @@ const Consulta = () => {
     }
 
     const enviaDoc=async()=>{
+      const requestBody = asignaRequestBody(objEnvia);
       try{
-        await axios.get(baseUrl_post, {params: {tipodoc: documentTypeState, sucursal: consultaForm.sucursal, correlativo: consultaForm.correlativo}})
+        console.log("Objeto a enviar");
+        console.log(requestBody);
+        await axios.post(baseUrl_post,requestBody)
         .catch(error=>{
-          setDialogDocumentNotFound(true);
+          setDialogDocumentNotSend(true);
         })
         .then(response=>{
-          if (typeof response.data[0] === 'undefined') {
-            setDialogDocumentNotFound(true);
-
+          console.log(response.status);
+          if (typeof response.status === '500'){
+            console.log("status 500 recibido, error del lado del servidor");
+            setDialogDocumentNotSend(true);
           }else{
-            
-            setResponseData(response.data[0]);
-            setDialogDocumentFound(true);
-            rows =[...rows,{ id: listaEleCol, tipoDocumento: response.data[0].tipodoc, sucursal: response.data[0].sucursal, correlativo: response.data[0].correlativo, mail: response.data[0].mail, fechaRegistro: response.data[0].fecha, estado: response.data[0].estado }];
-            setListaDoc(rows); 
-            setListaEleCol(listaEleCol+1);
-            console.log(rows);
+            console.log(response.status);
+            setDialogDocumentSend(true);
             return response.data;
           }
         });
       }
       catch(e){
-        setDialogDocumentNotFound(true);
+        setDialogDocumentNotSend(true);
         console.log(e);
       }
     }
 
     const volver = () => {
       window.location.href='./Menu';
+    }
+
+    const asignaRequestBody = (obj) => {
+      const requestDocs = {
+        "tipodoc": obj[0].tipoDocumento,
+        "sucursal": obj[0].sucursal,
+        "correlativo": obj[0].correlativo,
+        "mail": obj[0].mail,
+        "fecha": obj[0].fechaRegistro
+        }
+      return requestDocs;
     }
     
 
@@ -340,6 +352,47 @@ const Consulta = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDialogDocumentNotFound(false)}>
+            Aceptar
+          </Button>
+        </DialogActions>
+    </Dialog>
+
+
+    <Dialog
+        open={dialogDocumentSend}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Todo correcto!"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+          Documento enviado exitosamente. 
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDialogDocumentSend(false)}>
+            Aceptar
+          </Button>
+        </DialogActions>
+    </Dialog>
+
+    <Dialog
+        open={dialogDocumentNotSend}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Ups!, algo salió mal..."}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+          Documento no recibido, favor reintentar nuevamente. 
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDialogDocumentNotSend(false)}>
             Aceptar
           </Button>
         </DialogActions>
