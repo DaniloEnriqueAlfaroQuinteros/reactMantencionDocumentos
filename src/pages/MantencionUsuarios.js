@@ -9,6 +9,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import InputAdornment from '@mui/material/InputAdornment';
 import env from "react-dotenv";
+import { AuthenticatedTemplate, UnauthenticatedTemplate } from "@azure/msal-react";
 import {
     Dialog,
     DialogActions,
@@ -99,6 +100,7 @@ const UserMantainer = () => {
     
         return (
       <>  
+      <AuthenticatedTemplate>
             <Box style={{ background: "linear-gradient(#FFFFFF 30%, #2596be)", height: '100%', width: '100%'}}>
             <Grid
             container
@@ -327,6 +329,7 @@ const UserMantainer = () => {
 
 
       </Box>
+      </AuthenticatedTemplate>
             </>
 
         );

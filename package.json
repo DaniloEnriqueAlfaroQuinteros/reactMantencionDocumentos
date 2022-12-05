@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@azure/msal-browser": "^2.32.0",
+    "@azure/msal-react": "^1.5.0",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@mui/icons-material": "^5.10.3",
@@ -33,7 +35,12 @@
     "extends": "react-app"
   },
   "react-dotenv": {
-    "whitelist": ["URL_DOCUMENTS_GET", "URL_DOCUMENTS_POST","URL_LOGIN", "URL_REGISTERUSER"]
+    "whitelist": [
+      "URL_DOCUMENTS_GET",
+      "URL_DOCUMENTS_POST",
+      "URL_LOGIN",
+      "URL_REGISTERUSER"
+    ]
   },
   "browserslist": {
     "production": [

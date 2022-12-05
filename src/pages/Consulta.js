@@ -20,6 +20,7 @@ import {
     DialogContentText,
   } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
+import { AuthenticatedTemplate, UnauthenticatedTemplate } from "@azure/msal-react";
 
 const baseUrl=env.URL_DOCUMENTS_GET;
 const baseUrl_post=env.URL_DOCUMENTS_POST;
@@ -86,7 +87,7 @@ const Consulta = () => {
             console.log(response.data);
             setResponseData(response.data);
             setDialogDocumentFound(true);
-            rows =[...rows,{ id: listaEleCol, tipoDocumento: response.data.tipodoc, sucursal: response.data.sucursal, correlativo: response.data.correlativo, mail: response.data.mail, fechaRegistro: response.data.fecha, estado: response.data.estado }];
+            rows =[...rows,{ id: listaEleCol, tipodoc: response.data.tipodoc, sucursal: response.data.sucursal, correlativo: response.data.correlativo, mail: response.data.mail, fecha: response.data.fecha, estado: response.data.estado }];
             setListaDoc(rows); 
             setListaEleCol(listaEleCol+1);
             console.log(rows);
@@ -105,6 +106,8 @@ const Consulta = () => {
       const requestBody = asignaRequestBody(objEnvia);
       try{
         console.log("Objeto a enviar");
+        //console.log(requestBody);
+        //const req = JSON.stringify(Object.assign({}, objEnvia));
         console.log(requestBody);
         await axios.post(baseUrl_post,requestBody)
         .catch(error=>{
@@ -134,19 +137,20 @@ const Consulta = () => {
 
     const asignaRequestBody = (obj) => {
       const requestDocs = {
-        "tipodoc": obj[0].tipoDocumento,
+        "tipodoc": obj[0].tipodoc,
         "sucursal": obj[0].sucursal,
         "correlativo": obj[0].correlativo,
         "mail": obj[0].mail,
-        "fecha": obj[0].fechaRegistro
+        "fecha": obj[0].fecha
         }
       return requestDocs;
-    }
+    return requestDocs;
+  }
     
 
     const columns = [
       { field: 'id', headerName: 'ID', width: 90, editable: false },
-      { field: 'tipoDocumento', headerName: 'Tipo documento', width: 160, editable: false },
+      { field: 'tipodoc', headerName: 'Tipo documento', width: 160, editable: false },
       {
         field: 'sucursal',
         headerName: 'Sucursal',
@@ -169,7 +173,7 @@ const Consulta = () => {
         editable: false
       },
       {
-        field: 'fechaRegistro',
+        field: 'fecha',
         headerName: 'Fecha de registro',
         description: 'Fecha de registro de documento.',
         sortable: false,
@@ -190,6 +194,7 @@ const Consulta = () => {
 
         return (
       <>
+      <AuthenticatedTemplate>
       <Box style={{ background: "linear-gradient(#FFFFFF 10%, #2596be)", height: '100%', width: '100%'}}>
       <Grid
       container
@@ -413,6 +418,7 @@ const Consulta = () => {
 
     </Grid>
     </Box>  
+    </AuthenticatedTemplate>
       </>
       );
 

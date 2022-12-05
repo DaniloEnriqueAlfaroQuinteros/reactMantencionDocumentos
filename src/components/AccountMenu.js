@@ -12,24 +12,33 @@ import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import Cookies from 'universal-cookie';
+import { useMsal } from "@azure/msal-react";
 const cookies = new Cookies();
 
 const AccountMenu = () => {
 
-const cerrarSesion = () =>{
-        cookies.remove('id', {path: "/"});
-        cookies.remove('apellido_paterno', {path: "/"});
-        cookies.remove('apellido_materno', {path: "/"});
-        cookies.remove('nombre', {path: "/"});
-        cookies.remove('username', {path: "/"});
-        cookies.remove('tipodoc', {path: "/"});
-        cookies.remove('sucursal', {path: "/"});
-        cookies.remove('correlativo', {path: "/"});
-        cookies.remove('fechainical', {path: "/"});
-        cookies.remove('fechafinal', {path: "/"});
-        window.location.href='./';
-}
-
+  const cerrarSesion = () => {
+    cookies.remove('id', { path: "/" });
+    cookies.remove('apellido_paterno', { path: "/" });
+    cookies.remove('apellido_materno', { path: "/" });
+    cookies.remove('nombre', { path: "/" });
+    cookies.remove('username', { path: "/" });
+    cookies.remove('tipodoc', { path: "/" });
+    cookies.remove('sucursal', { path: "/" });
+    cookies.remove('correlativo', { path: "/" });
+    cookies.remove('fechainical', { path: "/" });
+    cookies.remove('fechafinal', { path: "/" });
+    window.location.href = './';
+  }
+  const { instance } = useMsal();
+    
+  const handleLogout = (logoutType) => {
+      if (logoutType === "redirect") {
+         instance.logoutRedirect({
+              postLogoutRedirectUri: "/",
+          });
+      }
+  }
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -106,7 +115,7 @@ const cerrarSesion = () =>{
         <MenuItem onClick={()=> 
                 {
                     
-                    cerrarSesion();
+                  handleLogout("redirect");
                     
                 }}>
           <ListItemIcon>

@@ -6,6 +6,8 @@ import Cookies from 'universal-cookie';
 import {GridLoader} from "react-spinners";
 import Box from '@mui/material/Box';
 import env from "react-dotenv";
+import { SignInButton } from '../components/SingInButton';
+import { AuthenticatedTemplate, UnauthenticatedTemplate } from "@azure/msal-react";
 
 import {
     Dialog,
@@ -18,11 +20,12 @@ import {
     Typography,
     DialogContentText,
   } from '@mui/material';
-  import PlayCircleFilledWhiteOutlinedIcon from '@mui/icons-material/PlayCircleFilledWhiteOutlined';
+
 
 const baseUrl=env.URL_LOGIN;
 
 const cookies = new Cookies();
+
 
 class Login extends Component {
    
@@ -51,7 +54,8 @@ class Login extends Component {
           isLoading: false
         };
       }
-
+      
+/*
     iniciarSesion=async()=>{
         this.setState({ isLoading: true});
         await axios.get(baseUrl, { timeout: 15000, params: {username: this.state.form.username, password: md5(this.state.form.password)}})
@@ -83,6 +87,7 @@ class Login extends Component {
         })
 
     }
+*/
 
     componentDidMount() {
         if(cookies.get('username')){
@@ -129,22 +134,9 @@ class Login extends Component {
 
 
                 <Grid item xs={12}>
-                <TextField id="outlined-basic" label="User" variant="outlined"
-                type="text"
-                className="form-control"
-                name="username"
-                onChange={this.handleChange}
-                />
                 </Grid>
 
                 <Grid item xs={12}>
-                <TextField
-                id="outlined-basic" label="Password" variant="outlined"
-                type="password"
-                className="form-control"
-                name="password"
-                onChange={this.handleChange}
-                />
                 </Grid>
                 <Grid item xs={12}>
             
@@ -154,16 +146,11 @@ class Login extends Component {
                 </Grid>
                
                 <Grid item xs={12}>
-                <Button variant="contained" endIcon={<PlayCircleFilledWhiteOutlinedIcon />} onClick={()=> 
-                {
-                    
-                    this.iniciarSesion();
-                    
-                }}> Acceder </Button>
+                <SignInButton/>
                 </Grid>
                 <Grid item xs={12}>
                 <Typography variant="h8" color="secondary">
-                Recupera tu contraseña aquí.
+ 
                 </Typography>
                 </Grid>
                 <Grid item xs={12}>
@@ -186,6 +173,16 @@ class Login extends Component {
         
         </Grid>
         <Grid item xs={12}>
+        
+        </Grid>
+        <Grid item xs={12}>
+        
+        </Grid>
+        <Grid item xs={12}>
+        
+        </Grid>
+        <Grid item xs={12}>
+        
         
         </Grid>
         <Grid item xs={12}>
@@ -222,9 +219,11 @@ class Login extends Component {
       </Dialog>
 
 
-
+      <AuthenticatedTemplate>
+                  
+                  
       <Dialog
-        open={this.state.dialogInfo}
+        open={true}
         onClose={() => this.setState({ dialogInfo: false})}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -234,7 +233,8 @@ class Login extends Component {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Presione boton aceptar para entrar al sistema de mantención de documentos.
+            
+            Usuario logeado correctamente en Falabella, presione aceptar para continuar.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -248,7 +248,7 @@ class Login extends Component {
           </Button>
         </DialogActions>
       </Dialog>
-      
+      </AuthenticatedTemplate> 
 
       <Dialog
         open={this.state.isLoading}
