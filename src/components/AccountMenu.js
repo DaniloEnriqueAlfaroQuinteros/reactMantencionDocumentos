@@ -17,19 +17,6 @@ const cookies = new Cookies();
 
 const AccountMenu = () => {
 
-  const cerrarSesion = () => {
-    cookies.remove('id', { path: "/" });
-    cookies.remove('apellido_paterno', { path: "/" });
-    cookies.remove('apellido_materno', { path: "/" });
-    cookies.remove('nombre', { path: "/" });
-    cookies.remove('username', { path: "/" });
-    cookies.remove('tipodoc', { path: "/" });
-    cookies.remove('sucursal', { path: "/" });
-    cookies.remove('correlativo', { path: "/" });
-    cookies.remove('fechainical', { path: "/" });
-    cookies.remove('fechafinal', { path: "/" });
-    window.location.href = './';
-  }
   const { instance } = useMsal();
     
   const handleLogout = (logoutType) => {
@@ -39,6 +26,7 @@ const AccountMenu = () => {
           });
       }
   }
+  
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {

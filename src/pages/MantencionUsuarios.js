@@ -21,7 +21,7 @@ import {
     DialogContentText,
   } from '@mui/material';
 
-  const baseUrl=env.URL_REGISTERUSERS;
+const baseUrl=env.URL_REGISTERUSERS;
 
 const UserMantainer = () => {
 

@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import Logo from '../../src/static/Logo.jpg';
-import axios from 'axios';
-import md5 from 'md5';
 import Cookies from 'universal-cookie';
 import {GridLoader} from "react-spinners";
 import Box from '@mui/material/Box';
-import env from "react-dotenv";
 import { SignInButton } from '../components/SingInButton';
-import { AuthenticatedTemplate, UnauthenticatedTemplate } from "@azure/msal-react";
+import { AuthenticatedTemplate } from "@azure/msal-react";
 
 import {
     Dialog,
@@ -16,13 +13,9 @@ import {
     DialogTitle,
     Button,
     Grid,
-    TextField,
     Typography,
     DialogContentText,
   } from '@mui/material';
-
-
-const baseUrl=env.URL_LOGIN;
 
 const cookies = new Cookies();
 
@@ -54,40 +47,6 @@ class Login extends Component {
           isLoading: false
         };
       }
-      
-/*
-    iniciarSesion=async()=>{
-        this.setState({ isLoading: true});
-        await axios.get(baseUrl, { timeout: 15000, params: {username: this.state.form.username, password: md5(this.state.form.password)}})
-        .then(response=>{
-            return response.data;
-        })
-        .then(response=>{
-            if(response.length>0){
-                let respuesta=response[0];
-                cookies.set('id', respuesta.id, {path: "/"});
-                cookies.set('apellido_paterno', respuesta.apellido_paterno, {path: "/"});
-                cookies.set('apellido_materno', respuesta.apellido_materno, {path: "/"});
-                cookies.set('nombre', respuesta.nombre, {path: "/"});
-                cookies.set('username', respuesta.username, {path: "/"});
-                cookies.set('userType', respuesta.userType, {path: "/"});
-                this.setState({ isLoading: false});
-                this.setState({ dialogInfo: true});
-
-            }else{
-                this.setState({ isLoading: false});
-                this.setState({ dialogValidation: true});
-            }
-        })
-        .catch(error=>{
-            this.setState({ isLoading: false});
-            this.setState({ dialogValidation: true});
-            console.log(error);
-            
-        })
-
-    }
-*/
 
     componentDidMount() {
         if(cookies.get('username')){
@@ -116,6 +75,7 @@ class Login extends Component {
             <Grid item xs={12}>
             <img
                 src={Logo}
+                alt=""
                 width={200} height={200}
                 style={{borderRadius: '50%'}}
                 />
